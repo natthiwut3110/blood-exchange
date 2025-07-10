@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Blood Exchange Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f8f8f8; padding: 20px; }
+    .container {
+      background: white; padding: 20px; border-radius: 10px;
+      margin-bottom: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 700px; margin: auto;
+    }
+    h2 { color: #b22222; }
+    label { display: block; margin-top: 10px; }
+    input {
+      width: 100%; padding: 8px; margin-top: 5px;
+      border-radius: 5px; border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 15px; padding: 10px;
+      background-color: #b22222; color: white;
+      border: none; border-radius: 5px; cursor: pointer;
+    }
+    button:hover { background-color: #8b1a1a; }
+    .result {
+      margin-top: 15px; background: #f0f0f0;
+      padding: 10px; border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>ข้อมูลจากแพทย์</h2>
+    <label>ปริมาตรเลือดที่แพทย์ต้องการ (ml):</label>
+    <input type="number" id="doctorVolume" placeholder="ตัวอย่าง: 500">
+  </div>
+
+  <div class="container">
+    <h2>ถุงที่ 1: คำนวณ V1 (ใช้สูตร C1V1 = C2V2)</h2>
+    <label>C1 (Hct ที่ต้องการ %)</label>
+    <input type="number" id="c1a" step="0.1">
+    <label>V2 (ปริมาตร PRC เริ่มต้น ml)</label>
+    <input type="number" id="v2a">
+    <label>C2 (Hct เริ่มต้น %)</label>
+    <input type="number" id="c2a" step="0.1">
+    <button onclick="calculateV1()">คำนวณ V1</button>
+    <div class="result" id="resultV1"></div>
+  </div>
+
+  <div class="container">
+    <h2>ถุงที่ 2: คำนวณ V2 (ใช้สูตร C1V1 = C2V2)</h2>
+    <label>C1 (Hct ที่ต้องการ %)</label>
+    <input type="number" id="c1b" step="0.1">
+    <label>V1 (ปริมาตรที่ต้องการ ml)</label>
+    <input type="number" id="v1b">
+    <label>C2 (Hct เริ่มต้น %)</label>
+    <input type="number" id="c2b" step="0.1">
+    <button onclick="calculateV2()">คำนวณ V2</button>
+    <div class="result" id="resultV2"></div>
+  </div>
+
+  <script>
+    function calculateV1() {
+      const c1 = parseFloat(document.getElementById("c1a").value);
+      const v2 = parseFloat(document.getElementById("v2a").value);
+      const c2 = parseFloat(document.getElementById("c2a").value);
+      if (isNaN(c1) || isNaN(v2) || isNaN(c2) || c2 === 0) {
+        alert("กรุณากรอกค่าทุกช่องให้ถูกต้อง");
+        return;
+      }
+      const v1 = (c2 * v2) / c1;
+      const ffp = v1 - v2;
+      document.getElementById("resultV1").innerHTML = `
+        <p>V1 = ${v1.toFixed(2)} ml</p>
+        <p>FFP ที่ต้องเติม = ${ffp.toFixed(2)} ml</p>
+        <p>เลือด = ${v2.toFixed(2)} ml</p>`;
+    }
+
+    function calculateV2() {
+      const c1 = parseFloat(document.getElementById("c1b").value);
+      const v1 = parseFloat(document.getElementById("v1b").value);
+      const c2 = parseFloat(document.getElementById("c2b").value);
+      if (isNaN(c1) || isNaN(v1) || isNaN(c2) || c2 === 0) {
+        alert("กรุณากรอกค่าทุกช่องให้ถูกต้อง");
+        return;
+      }
+      const v2 = (c1 * v1) / c2;
+      const ffp = v1 - v2;
+      document.getElementById("resultV2").innerHTML = `
+        <p>V2 = ${v2.toFixed(2)} ml</p>
+        <p>FFP ที่ต้องเติม = ${ffp.toFixed(2)} ml</p>
+        <p>เลือด = ${v1.toFixed(2)} ml</p>`;
+    }
+  </script>
+
+</body>
+</html>
